@@ -29,9 +29,11 @@ func StartBot() {
 	}
 	infoLog.Printf("✅ Bot Run Success")
 	// Kirim pesan bot ON
-	startMsg := tgbotapi.NewMessage(config.AllowedGroupID, "✅ Bot aktif (ON)")
-	startMsg := tgbotapi.NewMessage(config.AllowedGroupID, "✅ Create By Broyzdev")
-	bot.Send(startMsg)
+	msg1 := tgbotapi.NewMessage(config.AllowedGroupID, "✅ Bot aktif (ON)")
+	msg2 := tgbotapi.NewMessage(config.AllowedGroupID, "✅ Created By Broyzdev 2025")
+	bot.Send(msg1)
+	bot.Send(msg2)
+
 
 	// Tangani sinyal keluar
 	go func() {

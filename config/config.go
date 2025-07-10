@@ -10,5 +10,5 @@ const (
 )
 var AdminUserIDs = []int64{
     	1254986655, // angga
-	
+		1306352003, // ronald
 }
