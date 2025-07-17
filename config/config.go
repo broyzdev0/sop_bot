@@ -6,6 +6,7 @@ const (
 	BotToken       = "7644970055:AAHIkxh11yJG2R4iQgU6sXtionEXrK5kypo"
 	AllowedGroupID = -1002607079668
 	SheetName      = "Sheet1"
+	GeminiAPIKey = "AIzaSyBhKEwj6k9CNLkYsU8UIPzMOpk0saOrvfo"
 	
 )
 var AdminUserIDs = []int64{

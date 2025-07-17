@@ -61,7 +61,7 @@ func GetSOPFromMessage(message string) string {
 	}
 
 	infoLog.Printf("SOP tidak ditemukan (exact match only): %v", message)
-	return "❓ SOP tidak ditemukan. Pastikan keyword-nya sesuai atau ketik /help untuk melihat daftar."
+	return "❓ SOP tidak ditemukan. Pastikan keyword-nya sesuai atau ketik /help untuk melihat daftar keyword, /tanya menggunakan AI, /ask untuk bertanya sop."
 }
 
 // func GetSOPFromMessage(message string) string {
@@ -179,5 +179,6 @@ func GetAllKeywords() string {
 		return "❓ Belum ada keyword SOP yang tersedia."
 	}
 
-	return "📚 *Daftar Keyword SOP:*\n\n" + strings.Join(keywords, "\n") + "\n\nKetik aja salah satu keyword di atas, nanti aku bantuin kasih SOP-nya ya!"
+return "📚 *Daftar Keyword SOP:*\n\n" + strings.Join(keywords, "\n") + "\n\nKetik aja salah satu keyword di atas, nanti aku bantuin kasih SOP-nya ya!\n\nNote: /help untuk melihat daftar keyword, /tanya menggunakan AI, /ask untuk bertanya sop."
+
 }

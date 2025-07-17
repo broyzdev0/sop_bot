@@ -30,9 +30,11 @@ func StartBot() {
 	infoLog.Printf("✅ Bot Run Success")
 	// Kirim pesan bot ON
 	msg1 := tgbotapi.NewMessage(config.AllowedGroupID, "✅ Bot aktif (ON)")
-	msg2 := tgbotapi.NewMessage(config.AllowedGroupID, "✅ Created By Broyzdev 2025")
+	msg2 := tgbotapi.NewMessage(config.AllowedGroupID, "📢 Ketik /help Untuk Memulai")
+	msg3 := tgbotapi.NewMessage(config.AllowedGroupID, "✅ Created By Broyzdev 2025")
 	bot.Send(msg1)
 	bot.Send(msg2)
+	bot.Send(msg3)
 
 
 	// Tangani sinyal keluar
@@ -49,11 +51,6 @@ func StartBot() {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 	updates := bot.GetUpdatesChan(u)
-
-	// helpMsg := tgbotapi.NewMessage(config.AllowedGroupID, data.GetAllKeywords())
-	// helpMsg.ParseMode = "Markdown"
-	// helpMsg.ReplyToMessageID = 0
-	// bot.Send(helpMsg)
 
 	for update := range updates {
 		if update.Message == nil {
@@ -132,6 +129,36 @@ func StartBot() {
 	result := data.GetSOPFromMessage(queryContent)
 	msg := tgbotapi.NewMessage(chatID, result)
 	bot.Send(msg)
+	
+
+}
+
+if strings.HasPrefix(query, "/tanya ") {
+	isSpam, spamMsg := utils.IsSpam(int(userID))
+	if isSpam {
+		msg := tgbotapi.NewMessage(chatID, spamMsg)
+		bot.Send(msg)
+		continue
+	}
+
+	question := strings.TrimPrefix(query, "/tanya ")
+	infoLog.Printf("/tanya command: %s | From: %s", question, user.UserName)
+
+	answer, err := utils.AskGemini(question)
+	if err != nil {
+		errorLog.Printf("Gagal tanya ke Gemini: %v", err)
+		bot.Send(tgbotapi.NewMessage(chatID, "❌ Gagal tanya ke Gemini"))
+		continue
+	}
+
+	// Escape markdown & kirim bertahap
+	parts := utils.SplitMessage(answer, 4000)
+	for _, part := range parts {
+		escaped := utils.EscapeMarkdown(part)
+		msg := tgbotapi.NewMessage(chatID, escaped)
+		msg.ParseMode = "MarkdownV2"
+		bot.Send(msg)
+	}
 }
 
 	}
@@ -162,22 +189,6 @@ func getSheetsService(ctx context.Context) (*sheets.Service, error) {
 }
 
 
-// func AddSOP(keyword, description string) string {
-// 	ctx := context.Background()
-// 	srv, err := getSheetsService(ctx)
-// 	if err != nil {
-// 		log.Println("Gagal inisialisasi Google Sheets API:", err)
-// 		return "❌ Gagal inisialisasi Google Sheets API"
-// 	}
-// 	newRow := []interface{}{keyword, description}
-// 	appendCall := &sheets.ValueRange{Values: [][]interface{}{newRow}}
-// 	_, err = srv.Spreadsheets.Values.Append(config.SpreadsheetID, config.SheetRange, appendCall).ValueInputOption("RAW").Do()
-// 	if err != nil {
-// 		log.Println("Gagal menambahkan SOP ke Sheet:", err)
-// 		return "❌ Gagal menambahkan SOP"
-// 	}
-// 	return "✅ SOP berhasil ditambahkan!"
-// }
 func AddSOP(keyword, description string) string {
 	ctx := context.Background()
 	srv, err := getSheetsService(ctx)
@@ -290,3 +301,5 @@ func EditSOP(keyword, newDescription string) string {
 	infoLog.Println("SOP berhasil diubah!")
 	return "✅ SOP berhasil diubah!"
 }
+
+
